@@ -2,11 +2,11 @@
   "name": "analytics.js-integration-amplitude",
   "repo": "segment-integrations/analytics.js-integration-amplitude",
   "description": "The Amplitude analytics.js integration.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "main": "lib/index.js",
   "dependencies": {
-    "segmentio/analytics.js-integration": "0.3.x",
+    "segmentio/analytics.js-integration": "^1.0.0",
     "segmentio/top-domain": "1.0.0"
   },
   "development": {
