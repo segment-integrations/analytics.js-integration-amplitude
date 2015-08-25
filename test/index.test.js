@@ -33,7 +33,8 @@ describe('Amplitude', function() {
       .option('apiKey', '')
       .option('trackAllPages', false)
       .option('trackUtmProperties', true)
-      .option('trackNamedPages', true));
+      .option('trackNamedPages', true)
+      .option('trackReferrer', false));
   });
 
   describe('before loading', function() {
