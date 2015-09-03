@@ -34,7 +34,10 @@ describe('Amplitude', function() {
       .option('trackAllPages', false)
       .option('trackUtmProperties', true)
       .option('trackNamedPages', true)
-      .option('trackReferrer', false));
+      .option('trackReferrer', false)
+      .option('batchEvents', false)
+      .option('eventUploadThreshold', 30)
+      .option('eventUploadPeriodMillis', 30000));
   });
 
   describe('before loading', function() {
