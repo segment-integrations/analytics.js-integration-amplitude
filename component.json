@@ -6,8 +6,10 @@
   "license": "MIT",
   "main": "lib/index.js",
   "dependencies": {
+    "component/bind": "1.0.0",
     "segmentio/analytics.js-integration": "^1.0.0",
-    "segmentio/top-domain": "1.0.0"
+    "segmentio/top-domain": "1.0.0",
+    "segmentio/when": "0.0.1"
   },
   "development": {
     "segmentio/analytics.js-core": "^2.10.0",
