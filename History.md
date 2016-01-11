@@ -1,3 +1,9 @@
+
+1.0.12 / 2016-01-11
+===================
+
+  * Merge pull request #11 from amplitude/fix-runqueuedfunctions
+  * Only runQueuedFunctions after SDK loads
 1.0.11 / 2015-12-04
 ===================
 
