@@ -1,4 +1,13 @@
 
+1.0.14 / 2016-03-16
+===================
+
+  * Update Amplitude v2.9.1
+  * Fix bug where saveReferrer throws exception if sessionStorage is disabled.
+  * Log messages with a try/catch to support IE 8.
+  * Validate event properties during logEvent and initialization before sending request.
+  * Add instructions for proper integration with RequireJS.
+
 1.0.13 / 2016-02-11
 ===================
 
