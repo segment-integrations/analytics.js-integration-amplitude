@@ -62,7 +62,7 @@ describe('Amplitude', function() {
         analytics.assert(window.amplitude);
       });
 
-      it('should init with right options', function(done){
+      it('should init with right options', function(done) {
         analytics.initialize();
         analytics.once('ready', function() {
           analytics.assert(window.amplitude.options.includeUtm === options.trackUtmProperties);
@@ -237,6 +237,17 @@ describe('Amplitude', function() {
       it('should send a revenue event with quantity and productId', function() {
         analytics.track('event', { revenue: 19.99, quantity: 2, productId: 'AMP1' });
         analytics.called(window.amplitude.logRevenue, 19.99, 2, 'AMP1');
+      });
+    });
+
+    describe('#group', function() {
+      beforeEach(function() {
+        analytics.stub(window.amplitude, 'setGroup');
+      });
+
+      it('should call setGroup', function() {
+        analytics.group('testGroupId');
+        analytics.called(window.amplitude.setGroup, '[Segment] Group', 'testGroupId');
       });
     });
   });
