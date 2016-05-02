@@ -9,7 +9,12 @@ describe('Amplitude', function() {
   var amplitude;
   var analytics;
   var options = {
-    apiKey: '07808866adb2510adf19ee69e8fc2201'
+    apiKey: '07808866adb2510adf19ee69e8fc2201',
+    trackUtmProperties: true,
+    trackReferrer: false,
+    batchEvents: false,
+    eventUploadThreshold: 30,
+    eventUploadPeriodMillis: 30000
   };
 
   beforeEach(function() {
@@ -55,6 +60,18 @@ describe('Amplitude', function() {
         analytics.initialize();
         analytics.page();
         analytics.assert(window.amplitude);
+      });
+
+      it('should init with right options', function(done){
+        analytics.initialize();
+        analytics.once('ready', function() {
+          analytics.assert(window.amplitude.options.includeUtm === options.trackUtmProperties);
+          analytics.assert(window.amplitude.options.includeReferrer === options.trackReferrer);
+          analytics.assert(window.amplitude.options.batchEvents === options.batchEvents);
+          analytics.assert(window.amplitude.options.eventUploadThreshold === options.eventUploadThreshold);
+          analytics.assert(window.amplitude.options.eventUploadPeriodMillis === options.eventUploadPeriodMillis);
+          done();
+        });
       });
 
       it('should set api key', function(done) {
