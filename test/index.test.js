@@ -1,8 +1,9 @@
+'use strict';
 
-var Analytics = require('analytics.js-core').constructor;
-var integration = require('analytics.js-integration');
-var sandbox = require('clear-env');
-var tester = require('analytics.js-integration-tester');
+var Analytics = require('@segment/analytics.js-core').constructor;
+var integration = require('@segment/analytics.js-integration');
+var sandbox = require('@segment/clear-env');
+var tester = require('@segment/analytics.js-integration-tester');
 var Amplitude = require('../lib/');
 
 describe('Amplitude', function() {
@@ -62,76 +63,9 @@ describe('Amplitude', function() {
         analytics.assert(window.amplitude);
       });
 
-      it('should init with right options', function(done) {
-        analytics.initialize();
-        analytics.once('ready', function() {
-          analytics.assert(window.amplitude.options.includeUtm === options.trackUtmProperties);
-          analytics.assert(window.amplitude.options.includeReferrer === options.trackReferrer);
-          analytics.assert(window.amplitude.options.batchEvents === options.batchEvents);
-          analytics.assert(window.amplitude.options.eventUploadThreshold === options.eventUploadThreshold);
-          analytics.assert(window.amplitude.options.eventUploadPeriodMillis === options.eventUploadPeriodMillis);
-          done();
-        });
-      });
-
-      it('should set api key', function(done) {
-        analytics.initialize();
-        analytics.once('ready', function() {
-          analytics.assert(window.amplitude.options.apiKey === options.apiKey);
-          done();
-        });
-      });
-
-      it('should set domain', function() {
-        analytics.spy(amplitude, 'setDomain');
-        analytics.initialize();
-        analytics.page();
-        analytics.called(amplitude.setDomain, window.location.href);
-      });
-
-      describe('#setDomain', function() {
-        beforeEach(function() {
-          analytics.initialize();
-        });
-
-        it('should call window.amplitude.setDomain with the top domain', function() {
-          var href = 'https://sub.domain.com/path';
-          analytics.spy(window.amplitude, 'setDomain');
-          amplitude.setDomain(href);
-          analytics.called(window.amplitude.setDomain, 'domain.com');
-        });
-      });
-
-      describe('#setDeviceId', function() {
-        beforeEach(function() {
-          analytics.initialize();
-        });
-
-        it('should call window.amplitude.setDeviceId', function() {
-          analytics.spy(window.amplitude, 'setDeviceId');
-          amplitude.setDeviceId('deviceId');
-          analytics.called(window.amplitude.setDeviceId, 'deviceId');
-        });
-      });
-
-      it('should initialize utm properties', function() {
-        amplitude.options.trackUtmProperties = true;
-        analytics.initialize();
-        analytics.once('ready', function() {
-          analytics.spy(window.amplitude, '_initUtmData');
-          amplitude.initialize();
-          analytics.called(window.amplitude._initUtmData);
-        });
-      });
-
-      it('should not track utm properties if disabled', function() {
-        amplitude.options.trackUtmProperties = false;
-        analytics.initialize();
-        analytics.once('ready', function() {
-          analytics.spy(window.amplitude, '_initUtmData');
-          amplitude.initialize();
-          analytics.didNotCall(window.amplitude._initUtmData);
-        });
+      it('should call load', function() {
+        amplitude.initialize();
+        analytics.called(amplitude.load);
       });
     });
   });
@@ -147,6 +81,50 @@ describe('Amplitude', function() {
       analytics.once('ready', done);
       analytics.initialize();
       analytics.page();
+    });
+
+    it('should init with right options', function() {
+      analytics.assert(window.amplitude.options.includeUtm === options.trackUtmProperties);
+      analytics.assert(window.amplitude.options.includeReferrer === options.trackReferrer);
+      analytics.assert(window.amplitude.options.batchEvents === options.batchEvents);
+      analytics.assert(window.amplitude.options.eventUploadThreshold === options.eventUploadThreshold);
+      analytics.assert(window.amplitude.options.eventUploadPeriodMillis === options.eventUploadPeriodMillis);
+    });
+
+    it('should set api key', function() {
+      analytics.assert(window.amplitude.options.apiKey === options.apiKey);
+    });
+
+    describe('#setDomain', function() {
+      it('should set domain', function() {
+        analytics.spy(amplitude, 'setDomain');
+        analytics.initialize();
+        analytics.page();
+        analytics.called(amplitude.setDomain, window.location.href);
+      });
+    });
+
+    describe('#setDeviceId', function() {
+      it('should call window.amplitude.setDeviceId', function() {
+        analytics.spy(window.amplitude, 'setDeviceId');
+        amplitude.setDeviceId('deviceId');
+        analytics.called(window.amplitude.setDeviceId, 'deviceId');
+      });
+    });
+
+    describe('#_initUtmData', function() {
+      it('should initialize utm properties', function() {
+        amplitude.options.trackUtmProperties = true;
+        analytics.once('ready', function() {
+          analytics.spy(window.amplitude, '_initUtmData');
+          analytics.called(window.amplitude._initUtmData);
+        });
+      }); 
+
+      it('should not track utm properties if disabled', function() {
+        analytics.spy(window.amplitude, '_initUtmData');
+        analytics.didNotCall(window.amplitude._initUtmData);
+      });
     });
 
     describe('#page', function() {
