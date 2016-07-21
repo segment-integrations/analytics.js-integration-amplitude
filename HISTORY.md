@@ -1,3 +1,10 @@
+
+2.1.0 / 2016-07-21
+==================
+
+  * update amplitude v3.0.2 with support for logrevenueV2 option
+  * Update Karma to 1.1.0
+
 2.0.0 / 2016-06-21
 ==================
 
