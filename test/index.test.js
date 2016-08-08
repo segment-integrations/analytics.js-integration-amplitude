@@ -248,6 +248,21 @@ describe('Amplitude', function() {
         analytics.didNotCall(window.amplitude.logRevenue);
         analytics.called(window.amplitude.logRevenueV2, ampRevenue);
       });
+
+      it('should only send a revenue event if revenue is being logged', function() {
+        analytics.track('event', { price: 10.00, quantity: 2, productId: 'AMP1' });
+        analytics.called(window.amplitude.logEvent);
+        analytics.didNotCall(window.amplitude.logRevenue);
+        analytics.didNotCall(window.amplitude.logRevenueV2);
+      });
+
+      it('should only send a revenueV2 event if revenue is being logged', function() {
+        amplitude.options.useLogRevenueV2 = true;
+        analytics.track('event', { price: 10.00, quantity: 2, productId: 'AMP1' });
+        analytics.called(window.amplitude.logEvent);
+        analytics.didNotCall(window.amplitude.logRevenue);
+        analytics.didNotCall(window.amplitude.logRevenueV2);
+      });
     });
 
     describe('#group', function() {
