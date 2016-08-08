@@ -1,4 +1,9 @@
 
+2.1.1 / 2016-08-08
+==================
+
+  * Only send revenue event if revenue is being tracked
+
 2.1.0 / 2016-07-21
 ==================
 
