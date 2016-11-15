@@ -14,6 +14,7 @@ describe('Amplitude', function() {
     trackUtmProperties: true,
     trackReferrer: false,
     batchEvents: false,
+    deviceIdFromUrlParam: true,
     eventUploadThreshold: 30,
     eventUploadPeriodMillis: 30000
   };
@@ -86,7 +87,7 @@ describe('Amplitude', function() {
     it('should init with right options', function() {
       analytics.assert(window.amplitude.options.includeUtm === options.trackUtmProperties);
       analytics.assert(window.amplitude.options.includeReferrer === options.trackReferrer);
-      analytics.assert(window.amplitude.options.deviceIdFromUrlParam === true);
+      analytics.assert(window.amplitude.options.deviceIdFromUrlParam === options.deviceIdFromUrlParam);
       analytics.assert(window.amplitude.options.batchEvents === options.batchEvents); 
       analytics.assert(window.amplitude.options.eventUploadThreshold === options.eventUploadThreshold);
       analytics.assert(window.amplitude.options.eventUploadPeriodMillis === options.eventUploadPeriodMillis);
