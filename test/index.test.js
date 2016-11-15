@@ -15,7 +15,11 @@ describe('Amplitude', function() {
     trackReferrer: false,
     batchEvents: false,
     eventUploadThreshold: 30,
-    eventUploadPeriodMillis: 30000
+    eventUploadPeriodMillis: 30000,
+    forceHttps: false,
+    trackGclid: false,
+    saveParamsReferrerOncePerSession: true,
+    deviceIdFromUrlParam: false
   };
 
   beforeEach(function() {
@@ -43,7 +47,11 @@ describe('Amplitude', function() {
       .option('trackReferrer', false)
       .option('batchEvents', false)
       .option('eventUploadThreshold', 30)
-      .option('eventUploadPeriodMillis', 30000));
+      .option('eventUploadPeriodMillis', 30000)
+      .option('forceHttps', false)
+      .option('trackGclid', false)
+      .option('saveParamsReferrerOncePerSession', true)
+      .option('deviceIdFromUrlParam', false));
   });
 
   describe('before loading', function() {
@@ -89,6 +97,10 @@ describe('Amplitude', function() {
       analytics.assert(window.amplitude.options.batchEvents === options.batchEvents);
       analytics.assert(window.amplitude.options.eventUploadThreshold === options.eventUploadThreshold);
       analytics.assert(window.amplitude.options.eventUploadPeriodMillis === options.eventUploadPeriodMillis);
+      analytics.assert(window.amplitude.options.forceHttps === options.forceHttps);
+      analytics.assert(window.amplitude.options.includeGclid === options.trackGclid);
+      analytics.assert(window.amplitude.options.saveParamsReferrerOncePerSession === options.saveParamsReferrerOncePerSession);
+      analytics.assert(window.amplitude.options.deviceIdFromUrlParam === options.deviceIdFromUrlParam);
     });
 
     it('should set api key', function() {
