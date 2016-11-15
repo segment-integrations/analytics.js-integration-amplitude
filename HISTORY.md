@@ -1,4 +1,9 @@
 
+2.2.0 / 2016-11-15
+==================
+
+  * Update Amplitude v3.4.0 with support for forceHttps, trackGclid, saveParamsReferrerOncePerSession, deviceIdFromUrlParam options.
+
 2.1.1 / 2016-08-08
 ==================
 
