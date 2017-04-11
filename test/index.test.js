@@ -275,6 +275,59 @@ describe('Amplitude', function() {
         analytics.didNotCall(window.amplitude.logRevenue);
         analytics.didNotCall(window.amplitude.logRevenueV2);
       });
+
+      it('should flatten arrays that have nested arrays or objects', function() {
+        analytics.track('Order Completed', {
+          order_id: '50314b8e9bcf000000000000',
+          total: 30,
+          revenue: 25,
+          shipping: 3,
+          tax: 2,
+          discount: 2.5,
+          coupon: 'hasbros',
+          currency: 'USD',
+          products: [
+            {
+              id: '507f1f77bcf86cd799439011',
+              sku: '45790-32',
+              name: 'Monopoly: 3rd Edition',
+              price: 19,
+              quantity: 1,
+              category: 'Games'
+            },
+            {
+              id: '505bd76785ebb509fc183733',
+              sku: '46493-32',
+              name: 'Uno Card Game',
+              price: 3,
+              quantity: 2,
+              category: 'Games'
+            }
+          ]
+        }); 
+        analytics.called(window.amplitude.logEvent, 'Order Completed', { 
+          order_id: '50314b8e9bcf000000000000',
+          total: 30,
+          revenue: 25,
+          shipping: 3,
+          tax: 2,
+          discount: 2.5,
+          coupon: 'hasbros',
+          currency: 'USD',
+          'products.0.id': '507f1f77bcf86cd799439011',
+          'products.0.sku': '45790-32',
+          'products.0.name': 'Monopoly: 3rd Edition',
+          'products.0.price': 19,
+          'products.0.quantity': 1,
+          'products.0.category': 'Games',
+          'products.1.id': '505bd76785ebb509fc183733',
+          'products.1.sku': '46493-32',
+          'products.1.name': 'Uno Card Game',
+          'products.1.price': 3,
+          'products.1.quantity': 2,
+          'products.1.category': 'Games'
+        });
+      });
     });
 
     describe('#group', function() {
