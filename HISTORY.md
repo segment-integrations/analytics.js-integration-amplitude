@@ -1,4 +1,9 @@
 
+2.3.0 / 2017-04-11
+==================
+
+  * Allow mapping query params from context.page.search to a custom user/event property
+
 2.2.0 / 2016-11-15
 ==================
 

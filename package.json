@@ -1,7 +1,7 @@
 {
   "name": "@segment/analytics.js-integration-amplitude",
   "description": "The Amplitude analytics.js integration.",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "keywords": [
     "analytics.js",
     "analytics.js-integration",
@@ -23,10 +23,12 @@
   },
   "homepage": "https://github.com/segment-integrations/analytics.js-integration-amplitude#readme",
   "dependencies": {
+    "@ndhoule/each": "^2.0.1",
     "@segment/analytics.js-integration": "^2.1.0",
     "@segment/top-domain": "^3.0.0",
     "component-bind": "^1.0.0",
-    "do-when": "^1.0.0"
+    "do-when": "^1.0.0",
+    "is": "^3.2.1"
   },
   "devDependencies": {
     "@segment/analytics.js-core": "^3.0.0",
