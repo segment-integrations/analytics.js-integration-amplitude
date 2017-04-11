@@ -189,11 +189,11 @@ describe('Amplitude', function() {
       it('should map query params to custom property as event properties', function() {
         amplitude.options.trackAllPages = true;
         amplitude.options.mapQueryParams = { params: 'event_properties' };
-        analytics.page({}, { page: { search: '?suh=dude' } });
+        analytics.page({ referrer: document.referrer }, { page: { search: '?suh=dude' } });
         analytics.called(window.amplitude.logEvent, 'Loaded a Page', {
           params: '?suh=dude',
           path: '/context.html',
-          referrer: 'http://localhost:9876/?id=49847017',
+          referrer: document.referrer,
           search: '', // in practice this would also be set to the query param but limitation of test prevents this from being set
           title: '',
           url: 'http://localhost:9876/context.html'
