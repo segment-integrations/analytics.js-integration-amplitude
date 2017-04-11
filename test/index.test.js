@@ -19,7 +19,8 @@ describe('Amplitude', function() {
     forceHttps: false,
     trackGclid: false,
     saveParamsReferrerOncePerSession: true,
-    deviceIdFromUrlParam: false
+    deviceIdFromUrlParam: false,
+    mapQueryParams: {}
   };
 
   beforeEach(function() {
@@ -142,6 +143,7 @@ describe('Amplitude', function() {
     describe('#page', function() {
       beforeEach(function() {
         analytics.stub(window.amplitude, 'logEvent');
+        analytics.stub(window.amplitude, 'setUserProperties');
       });
 
       it('should not track unnamed pages by default', function() {
@@ -176,6 +178,27 @@ describe('Amplitude', function() {
         analytics.page('Category', 'Name');
         analytics.didNotCall(window.amplitude.logEvent);
       });
+
+      it('should map query params to custom property as user properties', function() {
+        amplitude.options.trackAllPages = true;
+        amplitude.options.mapQueryParams = { customProp: 'user_properties' };
+        analytics.page({}, { page: { search: '?suh=dude' } });
+        analytics.called(window.amplitude.setUserProperties, { customProp: '?suh=dude' });
+      });
+
+      it('should map query params to custom property as event properties', function() {
+        amplitude.options.trackAllPages = true;
+        amplitude.options.mapQueryParams = { params: 'event_properties' };
+        analytics.page({}, { page: { search: '?suh=dude' } });
+        analytics.called(window.amplitude.logEvent, 'Loaded a Page', {
+          params: '?suh=dude',
+          path: '/context.html',
+          referrer: 'http://localhost:9876/?id=49847017',
+          search: '', // in practice this would also be set to the query param but limitation of test prevents this from being set
+          title: '',
+          url: 'http://localhost:9876/context.html'
+        });
+      });
     });
 
     describe('#identify', function() {
@@ -199,11 +222,19 @@ describe('Amplitude', function() {
         analytics.called(window.amplitude.setUserId, 'id');
         analytics.called(window.amplitude.setUserProperties, { id: 'id', trait: true });
       });
+
+      it('should send query params under custom trait if set', function() {
+        amplitude.options.mapQueryParams = { ham: 'user_properties' };
+        analytics.identify('id', { trait: true }, { page: { search: '?foo=bar' } });
+        analytics.called(window.amplitude.setUserId, 'id');
+        analytics.called(window.amplitude.setUserProperties, { id: 'id', trait: true, ham: '?foo=bar' });
+      });
     });
 
     describe('#track', function() {
       beforeEach(function() {
         analytics.stub(window.amplitude, 'logEvent');
+        analytics.stub(window.amplitude, 'setUserProperties');
         analytics.stub(window.amplitude, 'logRevenue');
         analytics.stub(window.amplitude, 'logRevenueV2');
       });
@@ -274,6 +305,18 @@ describe('Amplitude', function() {
         analytics.called(window.amplitude.logEvent);
         analytics.didNotCall(window.amplitude.logRevenue);
         analytics.didNotCall(window.amplitude.logRevenueV2);
+      });
+
+      it('should send a query params under custom prop as user properties', function() {
+        amplitude.options.mapQueryParams = { ham: 'user_properties' };
+        analytics.track('event', { foo: 'bar' }, { page: { search: '?foo=bar' } });
+        analytics.called(window.amplitude.setUserProperties, { ham: '?foo=bar' });
+      });
+
+      it('should send a query params under custom prop as user or event properties', function() {
+        amplitude.options.mapQueryParams = { ham: 'event_properties' };
+        analytics.track('event', { foo: 'bar' }, { page: { search: '?foo=bar' } });
+        analytics.called(window.amplitude.logEvent, 'event', { foo: 'bar', ham: '?foo=bar' });
       });
     });
 
