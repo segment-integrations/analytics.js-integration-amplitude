@@ -253,58 +253,20 @@ describe('Amplitude', function() {
         analytics.didNotCall(window.amplitude.logRevenueV2);
       });
 
-      it('should send a revenue event', function() {
-        analytics.track('event', { revenue: 19.99 });
-        analytics.called(window.amplitude.logRevenue, 19.99, undefined, undefined);
-        analytics.didNotCall(window.amplitude.logRevenueV2);
+      it('should also add $revenue if properties.revenue exists', function() {
+        analytics.track('event', { revenue: 17.38 });
+        analytics.called(window.amplitude.logEvent, 'event', { revenue: 17.38, $revenue: 17.38 });
       });
 
-      it('should send a revenue event with quantity and productId', function() {
-        analytics.track('event', { revenue: 19.99, quantity: 2, productId: 'AMP1' });
-        analytics.called(window.amplitude.logRevenue, 19.99, 2, 'AMP1');
-        analytics.didNotCall(window.amplitude.logRevenueV2);
+      // FIXME: revisit this behavior later because it does not comply very well with our ecommerce spec
+      it('should also add $productId if productId if properties.productId exists', function() {
+        analytics.track('event', { product_id: 'yolo123' });
+        analytics.called(window.amplitude.logEvent, 'event', { product_id: 'yolo123', $productId: 'yolo123' });
       });
 
-      it('should send a revenueV2 event', function() {
-        amplitude.options.useLogRevenueV2 = true;
-        analytics.track('event', { revenue: 19.99 });
-        var ampRevenue = new window.amplitude.Revenue().setPrice(19.99).setEventProperties({ revenue: 19.99 });
-        analytics.didNotCall(window.amplitude.logRevenue);
-        analytics.called(window.amplitude.logRevenueV2, ampRevenue);
-      });
-
-      it('should send a revenueV2 event with quantity and productId and revenueType', function() {
-        amplitude.options.useLogRevenueV2 = true;
-        var props = { revenue: 20.00, quantity: 2, price: 10.00, productId: 'AMP1', revenueType: 'purchase' };
-        analytics.track('event', props);
-        var ampRevenue = new window.amplitude.Revenue().setPrice(10.00).setQuantity(2).setProductId('AMP1');
-        ampRevenue.setRevenueType('purchase').setEventProperties(props);
-        analytics.didNotCall(window.amplitude.logRevenue);
-        analytics.called(window.amplitude.logRevenueV2, ampRevenue);
-      });
-
-      it('should send a revenueV2 event with revenue if missing price', function() {
-        amplitude.options.useLogRevenueV2 = true;
-        analytics.track('event', { revenue: 20.00, quantity: 2, productId: 'AMP1' });
-        var ampRevenue = new window.amplitude.Revenue().setPrice(20.00).setProductId('AMP1');
-        ampRevenue.setEventProperties({ revenue: 20.00, quantity: 2, productId: 'AMP1' });
-        analytics.didNotCall(window.amplitude.logRevenue);
-        analytics.called(window.amplitude.logRevenueV2, ampRevenue);
-      });
-
-      it('should only send a revenue event if revenue is being logged', function() {
-        analytics.track('event', { price: 10.00, quantity: 2, productId: 'AMP1' });
-        analytics.called(window.amplitude.logEvent);
-        analytics.didNotCall(window.amplitude.logRevenue);
-        analytics.didNotCall(window.amplitude.logRevenueV2);
-      });
-
-      it('should only send a revenueV2 event if revenue is being logged', function() {
-        amplitude.options.useLogRevenueV2 = true;
-        analytics.track('event', { price: 10.00, quantity: 2, productId: 'AMP1' });
-        analytics.called(window.amplitude.logEvent);
-        analytics.didNotCall(window.amplitude.logRevenue);
-        analytics.didNotCall(window.amplitude.logRevenueV2);
+      it('should also add $revenueType if properties.revenueType exists', function() {
+        analytics.track('event', { revenueType: 'refund' });
+        analytics.called(window.amplitude.logEvent, 'event', { revenueType: 'refund', $revenueType: 'refund' });
       });
 
       it('should send a query params under custom prop as user properties', function() {
