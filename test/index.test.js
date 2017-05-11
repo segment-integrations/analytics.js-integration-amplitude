@@ -329,6 +329,17 @@ describe('Amplitude', function() {
         analytics.group('testGroupId');
         analytics.called(window.amplitude.setGroup, '[Segment] Group', 'testGroupId');
       });
+
+      it('should call setGroup with user defined groupNames', function() {
+        analytics.group('testGroupId', {}, {
+          integrations: {
+            Amplitude: {
+              groupName: ['foo', 'bar']
+            }
+          }
+        });
+        analytics.called(window.amplitude.setGroup, 'testGroupId', ['foo', 'bar']);
+      });
     });
   });
 });
