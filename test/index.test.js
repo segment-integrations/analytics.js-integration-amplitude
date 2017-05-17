@@ -205,6 +205,7 @@ describe('Amplitude', function() {
       beforeEach(function() {
         analytics.stub(window.amplitude, 'setUserId');
         analytics.stub(window.amplitude, 'setUserProperties');
+        analytics.stub(window.amplitude, 'setGroup');
       });
 
       it('should send an id', function() {
@@ -229,6 +230,11 @@ describe('Amplitude', function() {
         analytics.called(window.amplitude.setUserId, 'id');
         analytics.called(window.amplitude.setUserProperties, { id: 'id', trait: true, ham: '?foo=bar' });
       });
+
+      it('should set user groups if integration option `groups` is present', function() {
+        analytics.identify('id', {}, { integrations: { Amplitude: { groups: { foo: 'bar' } } } });
+        analytics.called(window.amplitude.setGroup, 'foo', 'bar');
+      });
     });
 
     describe('#track', function() {
@@ -237,6 +243,7 @@ describe('Amplitude', function() {
         analytics.stub(window.amplitude, 'setUserProperties');
         analytics.stub(window.amplitude, 'logRevenue');
         analytics.stub(window.amplitude, 'logRevenueV2');
+        analytics.stub(window.amplitude, 'logEventWithGroups');
       });
 
       it('should send an event', function() {
@@ -317,6 +324,11 @@ describe('Amplitude', function() {
         amplitude.options.mapQueryParams = { ham: 'event_properties' };
         analytics.track('event', { foo: 'bar' }, { page: { search: '?foo=bar' } });
         analytics.called(window.amplitude.logEvent, 'event', { foo: 'bar', ham: '?foo=bar' });
+      });
+
+      it('should send an event with groups if `groups` is an integration specific option', function() {
+        analytics.track('event', { foo: 'bar' }, { integrations: { Amplitude: { groups: { sports: 'basketball' } } } });
+        analytics.called(window.amplitude.logEventWithGroups, 'event', { foo: 'bar' }, { sports: 'basketball' });
       });
     });
 
