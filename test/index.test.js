@@ -205,6 +205,7 @@ describe('Amplitude', function() {
       beforeEach(function() {
         analytics.stub(window.amplitude, 'setUserId');
         analytics.stub(window.amplitude, 'setUserProperties');
+        analytics.stub(window.amplitude, 'setGroup');
       });
 
       it('should send an id', function() {
@@ -228,6 +229,11 @@ describe('Amplitude', function() {
         analytics.identify('id', { trait: true }, { page: { search: '?foo=bar' } });
         analytics.called(window.amplitude.setUserId, 'id');
         analytics.called(window.amplitude.setUserProperties, { id: 'id', trait: true, ham: '?foo=bar' });
+      });
+
+      it('should set user groups if integration option `groups` is present', function() {
+        analytics.identify('id', {}, { integrations: { Amplitude: { groups: { foo: 'bar' } } } });
+        analytics.called(window.amplitude.setGroup, 'foo', 'bar');
       });
     });
 
