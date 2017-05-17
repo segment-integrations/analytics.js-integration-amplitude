@@ -1,4 +1,9 @@
 
+2.4.0 / 2017-05-17
+==================
+
+  * Add support for Amplitude's `group` functionality to both identify and track events
+
 2.3.0 / 2017-04-11
 ==================
 
