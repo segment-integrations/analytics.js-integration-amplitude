@@ -5,6 +5,7 @@ var integration = require('@segment/analytics.js-integration');
 var sandbox = require('@segment/clear-env');
 var tester = require('@segment/analytics.js-integration-tester');
 var Amplitude = require('../lib/');
+var sinon = require('sinon');
 
 describe('Amplitude', function() {
   var amplitude;
@@ -262,7 +263,7 @@ describe('Amplitude', function() {
 
       it('should send a revenue event', function() {
         analytics.track('event', { revenue: 19.99 });
-        analytics.called(window.amplitude.logRevenue, 19.99, undefined, undefined);
+        analytics.called(window.amplitude.logRevenue, 19.99, 1, undefined);
         analytics.didNotCall(window.amplitude.logRevenueV2);
       });
 
@@ -329,6 +330,60 @@ describe('Amplitude', function() {
       it('should send an event with groups if `groups` is an integration specific option', function() {
         analytics.track('event', { foo: 'bar' }, { integrations: { Amplitude: { groups: { sports: 'basketball' } } } });
         analytics.called(window.amplitude.logEventWithGroups, 'event', { foo: 'bar' }, { sports: 'basketball' });
+      });
+    });
+
+    describe('#orderCompleted', function() {
+      var payload;
+      beforeEach(function() {
+        payload = {
+          checkoutId: 'fksdjfsdjfisjf9sdfjsd9f',
+          orderId: '50314b8e9bcf000000000000',
+          affiliation: 'Google Store',
+          total: 30,
+          revenue: 25,
+          shipping: 3,
+          tax: 2,
+          discount: 2.5,
+          coupon: 'hasbros',
+          currency: 'USD',
+          products: [
+            {
+              productId: '507f1f77bcf86cd799439011',
+              sku: '45790-32',
+              name: 'Monopoly: 3rd Edition',
+              price: 19,
+              quantity: 1,
+              category: 'Games'
+            },
+            {
+              productId: '505bd76785ebb509fc183733',
+              sku: '46493-32',
+              name: 'Uno Card Game',
+              price: 3,
+              quantity: 2,
+              category: 'Games'
+            }
+          ]
+        };
+      });
+
+      it('should send a logRevenueV2 event for all items in products array if trackRevenuePerProduct is true', function() {
+        var spy = sinon.spy(window.amplitude, 'logRevenueV2');
+        amplitude.options.trackRevenuePerProduct = true;
+        amplitude.options.useLogRevenueV2 = true;
+
+        analytics.track('Order Completed', payload);
+        analytics.assert(spy.calledTwice);
+      });
+
+      it('should only send a single logRevenueV2 event with the total revenue of all products if trackRevenuePerProduct is false ', function() {
+        var spy = sinon.spy(window.amplitude, 'logEvent');
+        amplitude.options.trackRevenuePerProduct = false;
+        amplitude.options.useLogRevenueV2 = true;
+
+        analytics.track('Order Completed', payload);
+        analytics.assert(spy.withArgs('Product Purchased').calledTwice);
       });
     });
 
