@@ -28,7 +28,8 @@
     "@segment/top-domain": "^3.0.0",
     "component-bind": "^1.0.0",
     "do-when": "^1.0.0",
-    "is": "^3.2.1"
+    "is": "^3.2.1",
+    "segmentio-facade": "^3.2.1"
   },
   "devDependencies": {
     "@segment/analytics.js-core": "^3.0.0",
