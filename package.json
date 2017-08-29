@@ -28,7 +28,8 @@
     "@segment/top-domain": "^3.0.0",
     "component-bind": "^1.0.0",
     "do-when": "^1.0.0",
-    "is": "^3.2.1"
+    "is": "^3.2.1",
+    "segmentio-facade": "^3.2.1"
   },
   "devDependencies": {
     "@segment/analytics.js-core": "^3.0.0",
@@ -53,6 +54,7 @@
     "mocha": "^2.2.5",
     "npm-check": "^5.2.1",
     "phantomjs-prebuilt": "^2.1.7",
+    "sinon": "^3.2.1",
     "watchify": "^3.7.0"
   }
 }
