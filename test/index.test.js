@@ -21,6 +21,7 @@ describe('Amplitude', function() {
     trackGclid: false,
     saveParamsReferrerOncePerSession: true,
     deviceIdFromUrlParam: false,
+    trackRevenuePerProduct: false,
     mapQueryParams: {}
   };
 
@@ -53,6 +54,7 @@ describe('Amplitude', function() {
       .option('forceHttps', false)
       .option('trackGclid', false)
       .option('saveParamsReferrerOncePerSession', true)
+      .option('trackRevenuePerProduct', true)
       .option('deviceIdFromUrlParam', false));
   });
 
