@@ -1,4 +1,9 @@
 
+2.5.0 / 2017-08-30
+==================
+
+  * Improve revenue tracking from Order Completed events.
+
 2.4.0 / 2017-05-17
 ==================
 
