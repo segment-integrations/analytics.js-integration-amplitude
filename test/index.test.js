@@ -398,6 +398,11 @@ describe('Amplitude', function() {
         analytics.group('testGroupId');
         analytics.called(window.amplitude.setGroup, '[Segment] Group', 'testGroupId');
       });
+
+      it('should use groupType from traits', function() {
+        analytics.group('testGroupId', { groupType: 'testGroupType' });
+        analytics.called(window.amplitude.setGroup, 'testGroupType', 'testGroupId');
+      });
     });
   });
 });
