@@ -451,6 +451,20 @@ describe('Amplitude', function() {
         analytics.called(window.amplitude.setGroup, '[Segment] Group', 'testGroupId');
       });
 
+      it('should use `groupTypeTrait` and `groupValueTrait` when both are present', function() {
+        amplitude.options.groupTypeTrait = 'foo';
+        amplitude.options.groupValueTrait = 'bar';
+        analytics.group('testGroupId', { foo: 'asdf', bar: 'fafa' });
+        analytics.called(window.amplitude.setGroup, 'asdf', 'fafa');
+      });
+
+      it('should fall back to default behavior if either `group{Type, Value}Trait` is missing', function() {
+        amplitude.options.groupTypeTrait = 'foo';
+        amplitude.options.groupValueTrait = 'bar';
+        analytics.group('testGroupId', { notFoo: 'asdf', bar: 'fafa' });
+        analytics.called(window.amplitude.setGroup, '[Segment] Group', 'testGroupId');
+      });
+
       it('should set deviceId if `preferAnonymousIdForDeviceId` is set', function() {
         analytics.user().anonymousId('example');
         amplitude.options.preferAnonymousIdForDeviceId = false;
