@@ -147,6 +147,7 @@ describe('Amplitude', function() {
       beforeEach(function() {
         analytics.stub(window.amplitude, 'logEvent');
         analytics.stub(window.amplitude, 'setUserProperties');
+        analytics.stub(window.amplitude, 'setDeviceId');
       });
 
       it('should not track unnamed pages by default', function() {
@@ -202,6 +203,17 @@ describe('Amplitude', function() {
           url: 'http://localhost:9876/context.html'
         });
       });
+
+      it('should set deviceId if `preferAnonymousIdForDeviceId` is set', function() {
+        analytics.user().anonymousId('example');
+        amplitude.options.preferAnonymousIdForDeviceId = false;
+        analytics.identify('id');
+        analytics.didNotCall(window.amplitude.setDeviceId);
+
+        amplitude.options.preferAnonymousIdForDeviceId = true;
+        analytics.identify('id');
+        analytics.called(window.amplitude.setDeviceId, 'example');
+      });
     });
 
     describe('#identify', function() {
@@ -209,6 +221,7 @@ describe('Amplitude', function() {
         analytics.stub(window.amplitude, 'setUserId');
         analytics.stub(window.amplitude, 'setUserProperties');
         analytics.stub(window.amplitude, 'setGroup');
+        analytics.stub(window.amplitude, 'setDeviceId');
       });
 
       it('should send an id', function() {
@@ -238,6 +251,17 @@ describe('Amplitude', function() {
         analytics.identify('id', {}, { integrations: { Amplitude: { groups: { foo: 'bar' } } } });
         analytics.called(window.amplitude.setGroup, 'foo', 'bar');
       });
+
+      it('should set deviceId if `preferAnonymousIdForDeviceId` is set', function() {
+        analytics.user().anonymousId('example');
+        amplitude.options.preferAnonymousIdForDeviceId = false;
+        analytics.identify('id');
+        analytics.didNotCall(window.amplitude.setDeviceId);
+
+        amplitude.options.preferAnonymousIdForDeviceId = true;
+        analytics.identify('id');
+        analytics.called(window.amplitude.setDeviceId, 'example');
+      });
     });
 
     describe('#track', function() {
@@ -247,6 +271,7 @@ describe('Amplitude', function() {
         analytics.stub(window.amplitude, 'logRevenue');
         analytics.stub(window.amplitude, 'logRevenueV2');
         analytics.stub(window.amplitude, 'logEventWithGroups');
+        analytics.stub(window.amplitude, 'setDeviceId');
       });
 
       it('should send an event', function() {
@@ -333,9 +358,24 @@ describe('Amplitude', function() {
         analytics.track('event', { foo: 'bar' }, { integrations: { Amplitude: { groups: { sports: 'basketball' } } } });
         analytics.called(window.amplitude.logEventWithGroups, 'event', { foo: 'bar' }, { sports: 'basketball' });
       });
+
+      it('should set deviceId if `preferAnonymousIdForDeviceId` is set', function() {
+        analytics.user().anonymousId('example');
+        amplitude.options.preferAnonymousIdForDeviceId = false;
+        analytics.page();
+        analytics.didNotCall(window.amplitude.setDeviceId);
+
+        amplitude.options.preferAnonymousIdForDeviceId = true;
+        analytics.page();
+        analytics.called(window.amplitude.setDeviceId, 'example');
+      });
     });
 
     describe('#orderCompleted', function() {
+      beforeEach(function() {
+        analytics.stub(window.amplitude, 'setDeviceId');
+      });
+
       var payload;
       beforeEach(function() {
         payload = {
@@ -387,16 +427,53 @@ describe('Amplitude', function() {
         analytics.track('Order Completed', payload);
         analytics.assert(spy.withArgs('Product Purchased').calledTwice);
       });
+
+      it('should set deviceId if `preferAnonymousIdForDeviceId` is set', function() {
+        analytics.user().anonymousId('example');
+        amplitude.options.preferAnonymousIdForDeviceId = false;
+        analytics.track('Order Completed');
+        analytics.didNotCall(window.amplitude.setDeviceId);
+
+        amplitude.options.preferAnonymousIdForDeviceId = true;
+        analytics.track('Order Completed');
+        analytics.called(window.amplitude.setDeviceId, 'example');
+      });
     });
 
     describe('#group', function() {
       beforeEach(function() {
         analytics.stub(window.amplitude, 'setGroup');
+        analytics.stub(window.amplitude, 'setDeviceId');
       });
 
       it('should call setGroup', function() {
         analytics.group('testGroupId');
         analytics.called(window.amplitude.setGroup, '[Segment] Group', 'testGroupId');
+      });
+
+      it('should use `groupTypeTrait` and `groupValueTrait` when both are present', function() {
+        amplitude.options.groupTypeTrait = 'foo';
+        amplitude.options.groupValueTrait = 'bar';
+        analytics.group('testGroupId', { foo: 'asdf', bar: 'fafa' });
+        analytics.called(window.amplitude.setGroup, 'asdf', 'fafa');
+      });
+
+      it('should fall back to default behavior if either `group{Type, Value}Trait` is missing', function() {
+        amplitude.options.groupTypeTrait = 'foo';
+        amplitude.options.groupValueTrait = 'bar';
+        analytics.group('testGroupId', { notFoo: 'asdf', bar: 'fafa' });
+        analytics.called(window.amplitude.setGroup, '[Segment] Group', 'testGroupId');
+      });
+
+      it('should set deviceId if `preferAnonymousIdForDeviceId` is set', function() {
+        analytics.user().anonymousId('example');
+        amplitude.options.preferAnonymousIdForDeviceId = false;
+        analytics.group('group');
+        analytics.didNotCall(window.amplitude.setDeviceId);
+
+        amplitude.options.preferAnonymousIdForDeviceId = true;
+        analytics.group('group');
+        analytics.called(window.amplitude.setDeviceId, 'example');
       });
     });
   });
