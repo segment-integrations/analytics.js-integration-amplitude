@@ -1,3 +1,8 @@
+2.7.0 / 2018-02-12
+==================
+
+  * anonymousID-as-deviceID + group{Type, Value}Trait support (#38)
+
 2.6.0 / 2017-09-18
 ==================
 
