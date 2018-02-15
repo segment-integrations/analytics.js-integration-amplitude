@@ -1,5 +1,5 @@
 {
-  "name": "@segment/analytics.js-integration-amplitude",
+  "name": "@astronomerio/analytics.js-integration-amplitude",
   "description": "The Amplitude analytics.js integration.",
   "version": "2.7.0",
   "keywords": [
