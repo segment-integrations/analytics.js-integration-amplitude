@@ -1,3 +1,37 @@
+2.7.0 / 2018-02-12
+==================
+
+  * anonymousID-as-deviceID + group{Type, Value}Trait support (#38)
+
+2.6.0 / 2017-09-18
+==================
+
+  * Update Amplitude to 3.7.0
+
+2.5.0 / 2017-08-30
+==================
+
+  * Improve revenue tracking from Order Completed events.
+
+2.4.0 / 2017-05-17
+==================
+
+  * Patch potential duplicate track event issue when using Groups functionality.
+
+2.4.0 / 2017-05-17
+==================
+
+  * Add support for Amplitude's `group` functionality to both identify and track events
+
+2.3.0 / 2017-04-11
+==================
+
+  * Allow mapping query params from context.page.search to a custom user/event property
+
+2.2.0 / 2016-11-15
+==================
+
+  * Update Amplitude v3.4.0 with support for forceHttps, trackGclid, saveParamsReferrerOncePerSession, deviceIdFromUrlParam options.
 
 2.1.1 / 2016-08-08
 ==================
